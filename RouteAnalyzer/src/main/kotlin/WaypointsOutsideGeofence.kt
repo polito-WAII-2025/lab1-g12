@@ -12,7 +12,8 @@ fun waypointsOutsideGeofence(
     val result = GeofenceResult(
         OutsideWaypointsInfo(
             centralWaypoint = Waypoint(0.0, centerLatitude, centerLongitude),
-            outsideWaypointsCount = outsideWaypoints.size,
+            areaRadiusKm = radius / 1000,
+            count = outsideWaypoints.size,
             waypoints = outsideWaypoints
         )
     )
