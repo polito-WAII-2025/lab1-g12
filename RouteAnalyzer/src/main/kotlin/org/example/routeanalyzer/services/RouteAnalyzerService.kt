@@ -227,4 +227,19 @@ class RouteAnalyzerService {
             waypoints = outsideWaypoints
         )
     }
+
+    fun totalDistance(customParameters: CustomParameter, waypoints: List<Waypoint>): Double {
+        if (waypoints.size < 2) return 0.0
+
+        var totalDist = 0.0
+        for (i in 0 until waypoints.size - 1) {
+            val lat1 = waypoints[i].latitude
+            val lon1 = waypoints[i].longitude
+            val lat2 = waypoints[i+1].latitude
+            val lon2 = waypoints[i+1].longitude
+
+            totalDist += haversineDistance(lat1, lon1, lat2, lon2, customParameters.earthRadiusKm)
+        }
+        return totalDist
+    }
 }

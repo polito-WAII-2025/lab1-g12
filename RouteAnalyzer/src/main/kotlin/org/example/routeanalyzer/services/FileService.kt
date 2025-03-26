@@ -4,6 +4,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import org.example.routeanalyzer.models.CustomParameter
 import org.example.routeanalyzer.models.JSONOutput
+import org.example.routeanalyzer.models.JSONOutputAdvanced
 import org.example.routeanalyzer.models.Waypoint
 import org.yaml.snakeyaml.Yaml
 import java.io.File
@@ -79,6 +80,13 @@ class FileService {
     fun output(
         filePath: String,
         result: JSONOutput,
+    ){
+        File(filePath).writeText(json.encodeToString(result))
+    }
+
+    fun outputAdvanced(
+        filePath: String,
+        result: JSONOutputAdvanced,
     ){
         File(filePath).writeText(json.encodeToString(result))
     }

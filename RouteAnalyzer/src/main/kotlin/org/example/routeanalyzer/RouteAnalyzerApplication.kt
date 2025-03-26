@@ -1,9 +1,6 @@
 package org.example.routeanalyzer
 
-import org.example.routeanalyzer.models.JSONOutput
-import org.example.routeanalyzer.models.MaxDistanceFromStart
-import org.example.routeanalyzer.models.MostFrequentedArea
-import org.example.routeanalyzer.models.OutsideGeofence
+import org.example.routeanalyzer.models.*
 import org.example.routeanalyzer.services.FileService
 import org.example.routeanalyzer.services.RouteAnalyzerService
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -31,6 +28,8 @@ fun main(args: Array<String>) {
     val mostFrequentedArea: MostFrequentedArea = routeAnalyzerService.mostFrequentedArea(customParameter, waypoints)
     val waypointsOutsideGeofence: OutsideGeofence = routeAnalyzerService.waypointsOutsideGeofence(customParameter, waypoints)
 
+    val totalDistance = routeAnalyzerService.totalDistance(customParameter, waypoints)
+
     // Putting everything together
     val finalOutput = JSONOutput(
         maxDistanceFromStart,
@@ -38,6 +37,9 @@ fun main(args: Array<String>) {
         waypointsOutsideGeofence
     )
 
+    val advancedOutput = JSONOutputAdvanced(totalDistance)
+
     //Writing to Output
     fileService.output("./output.json", finalOutput)
+    fileService.outputAdvanced("./output_advanced.json", advancedOutput)
 }
