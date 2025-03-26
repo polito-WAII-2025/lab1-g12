@@ -1,53 +1,43 @@
 package org.example.routeanalyzer
 
-import org.example.routeanalyzer.models.Waypoint
+import org.example.routeanalyzer.models.JSONOutput
+import org.example.routeanalyzer.models.MaxDistanceFromStart
+import org.example.routeanalyzer.models.MostFrequentedArea
+import org.example.routeanalyzer.models.OutsideGeofence
 import org.example.routeanalyzer.services.FileService
 import org.example.routeanalyzer.services.RouteAnalyzerService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import kotlin.math.round
 
-const val maxdist = 2000.0
+const val maxDist = 2000.0
 
 @SpringBootApplication
 class RouteAnalyzerApplication
 
 
-
 fun main(args: Array<String>) {
     runApplication<RouteAnalyzerApplication>(*args)
 
+    // Initializing file service and analyzer service
     val fileService = FileService()
     val routeAnalyzerService = RouteAnalyzerService()
 
+    // Reading waypoints file and custom parameters
+    val waypoints = fileService.readCsv("/waypoints.csv")
     val customParameter = fileService.readYaml("/custom-parameters.yaml")
 
+    // Computing data
+    val maxDistanceFromStart: MaxDistanceFromStart = routeAnalyzerService.calculateMaxDistance(customParameter ,waypoints)
+    val mostFrequentedArea: MostFrequentedArea = routeAnalyzerService.mostFrequentedArea(customParameter, waypoints)
+    val waypointsOutsideGeofence: OutsideGeofence = routeAnalyzerService.waypointsOutsideGeofence(customParameter, waypoints)
 
-    val waypoints = fileService.readCsv("/waypoints.csv")
-    lateinit var centralWaypoint: Waypoint
-    var entriesCount = 0
-    for(i in waypoints){
-        val centerLat = i.lat
-        val centerLng = i.lng
-        val radius = customParameter.mostFrequentedAreaRadiusKm ?: (round((maxdist/10) * 10) / 10)
-        var counter = 0
-        for(j in waypoints){
-            if(routeAnalyzerService.isPointInCircle(centerLat,centerLng,radius,j.lat,j.lng)){
-                counter++
-            }
-        }
-        if (counter > entriesCount){
-            entriesCount = counter
-            centralWaypoint = i
-        }
-    }
+    // Putting everything together
+    val finalOutput = JSONOutput(
+        maxDistanceFromStart,
+        mostFrequentedArea,
+        waypointsOutsideGeofence
+    )
 
-    val result = routeAnalyzerService.calculateMaxDistance(waypoints, customParameter.earthRadiusKm)
-
-    result?.let { (waypoint, distance) ->
-        println("Max Distance from Start: $distance km at waypoint: $waypoint")
-    } ?: println("No waypoints available.")
-
-    println(centralWaypoint)
-    println(entriesCount)
+    //Writing to Output
+    fileService.output("./output.json", finalOutput)
 }
