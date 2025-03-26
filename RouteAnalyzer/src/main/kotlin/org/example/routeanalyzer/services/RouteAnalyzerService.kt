@@ -165,12 +165,12 @@ class RouteAnalyzerService {
     ): MostFrequentedArea {
         var centralWaypoint: Waypoint = waypoints[0]
         var entriesCount = 0
-        val maxdist = 2000.0
+        val maxdist = calculateMaxDistance(customParameters, waypoints).distanceKm
+        val radius = customParameters.mostFrequentedAreaRadiusKm ?: (maxdist*100)
 
         for (i in waypoints) {
             val centerLat = i.latitude
             val centerLng = i.longitude
-            val radius = customParameters.mostFrequentedAreaRadiusKm ?: (round((maxdist/10) * 10) / 10)
             var counter = 0
 
             for (j in waypoints) {
@@ -184,7 +184,8 @@ class RouteAnalyzerService {
                 centralWaypoint = i
             }
         }
-        val areaRadiusKm = customParameters.geofenceRadiusKm
+        val areaRadiusKm = customParameters.mostFrequentedAreaRadiusKm ?: ((round(maxdist * 10) / 10)/10)
+
 
         return MostFrequentedArea(centralWaypoint, areaRadiusKm, entriesCount)
     }
