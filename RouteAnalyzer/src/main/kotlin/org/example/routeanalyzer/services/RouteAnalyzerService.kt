@@ -228,7 +228,20 @@ class RouteAnalyzerService {
         )
     }
 
-    fun totalDistance(customParameters: CustomParameter, waypoints: List<Waypoint>): Double {
+    /**
+     * Calculates the total distance between consecutive waypoints in a list.
+     *
+     * This function iterates through the list of waypoints and calculates the Haversine distance
+     * between each consecutive pair of waypoints. The total distance is the sum of these individual distances.
+     *
+     * @param customParameters An instance of [CustomParameter] containing configuration such as the Earth's radius.
+     * @param waypoints A list of [Waypoint] objects representing the recorded locations.
+     * @return The total Haversine distance between consecutive waypoints in kilometers.
+     */
+    fun totalDistance(
+        customParameters: CustomParameter,
+        waypoints: List<Waypoint>
+    ): Double {
         if (waypoints.size < 2) return 0.0
 
         var totalDist = 0.0
