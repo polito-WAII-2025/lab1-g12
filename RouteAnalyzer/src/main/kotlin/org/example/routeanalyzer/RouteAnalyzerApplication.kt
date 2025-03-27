@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
     // Reading waypoints file and custom parameters
     val waypoints = fileService.readCsv("/waypoints.csv")
-    val customParameter = fileService.readYaml("/custom-parameters.yaml")
+    val customParameter = fileService.readYaml("/app/custom-parameters.yaml")
 
     // Computing data
     val maxDistanceFromStart: MaxDistanceFromStart = routeAnalyzerService.calculateMaxDistance(customParameter ,waypoints)

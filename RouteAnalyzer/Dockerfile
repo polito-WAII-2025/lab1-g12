@@ -5,10 +5,10 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copia il codice sorgente dell'applicazione (per esempio, i file .jar o le cartelle build) nel contenitore
-COPY build/libs/RouteAnalyzer-1.0-SNAPSHOT.jar /app/RouteAnalyzer.jar
+COPY build/libs/RouteAnalyzer-0.0.1-SNAPSHOT.jar /app/RouteAnalyzer.jar
 
 # Copia il file custom-parameters.yml nel contenitore (questo sarà montato durante l'esecuzione)
-COPY custom-parameters.yml /app/custom-parameters.yml
+COPY ./custom-parameters.yaml /app/custom-parameters.yaml
 
 # Imposta il comando per eseguire l'applicazione Kotlin
 CMD ["java", "-jar", "RouteAnalyzer.jar"]
