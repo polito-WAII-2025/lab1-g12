@@ -13,7 +13,8 @@
 
 # How to run
 ## Building
-  `./gradlew clean build`
+
+` docker build -t route-analyzer .`
 
 ## Use default paths
 `docker run -v output:/app route-analyzer`
