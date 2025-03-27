@@ -40,6 +40,6 @@ fun main(args: Array<String>) {
     val advancedOutput = JSONOutputAdvanced(totalDistance)
 
     //Writing to Output
-    fileService.output("./output.json", finalOutput)
-    fileService.outputAdvanced("./output_advanced.json", advancedOutput)
+    fileService.output("/app/output.json", finalOutput)
+    fileService.outputAdvanced("/app/output_advanced.json", advancedOutput)
 }
