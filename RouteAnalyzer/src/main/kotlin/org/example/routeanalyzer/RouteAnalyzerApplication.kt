@@ -13,6 +13,9 @@ class RouteAnalyzerApplication
 
 
 fun main(args: Array<String>) {
+
+    val csvFilePath = if (args.isNotEmpty()) args[0] else "/waypoints.csv"
+
     runApplication<RouteAnalyzerApplication>(*args)
 
     // Initializing file service and analyzer service
@@ -20,8 +23,8 @@ fun main(args: Array<String>) {
     val routeAnalyzerService = RouteAnalyzerService()
 
     // Reading waypoints file and custom parameters
-    val waypoints = fileService.readCsv("/waypoints.csv")
-    val customParameter = fileService.readYaml("/app/custom-parameters.yaml")
+    val waypoints = fileService.readCsv(csvFilePath)
+    val customParameter = fileService.readYaml("C:\\Users\\USER\\Documents\\Codice\\lab1-g12\\RouteAnalyzer\\custom-parameters.yaml")
 
     // Computing data
     val maxDistanceFromStart: MaxDistanceFromStart = routeAnalyzerService.calculateMaxDistance(customParameter ,waypoints)
@@ -40,6 +43,6 @@ fun main(args: Array<String>) {
     val advancedOutput = JSONOutputAdvanced(totalDistance)
 
     //Writing to Output
-    fileService.output("/app/output.json", finalOutput)
-    fileService.outputAdvanced("/app/output_advanced.json", advancedOutput)
+    fileService.output("./output.json", finalOutput)
+    fileService.outputAdvanced("./output_advanced.json", advancedOutput)
 }
