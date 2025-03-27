@@ -20,4 +20,6 @@
 `docker run -v output:/app route-analyzer`
 
 ## Specify custom paths
+Attention: Docker cannot access local directories. Permissions need to be granted.
+
 `docker run -v output:/app/ -v "<path-to-your-input-folder>:/input" route-analyzer /input/waypoints.csv /input/custom-parameters.yml`
