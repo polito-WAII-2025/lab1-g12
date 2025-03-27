@@ -166,7 +166,7 @@ class RouteAnalyzerService {
         var centralWaypoint: Waypoint = waypoints[0]
         var entriesCount = 0
         val maxdist = calculateMaxDistance(customParameters, waypoints).distanceKm
-        val radius = customParameters.mostFrequentedAreaRadiusKm ?: (maxdist*100)
+        val radius = customParameters.mostFrequentedAreaRadiusKm?.times(1000) ?: (maxdist*100)
 
         for (i in waypoints) {
             val centerLat = i.latitude
