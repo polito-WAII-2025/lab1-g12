@@ -29,7 +29,7 @@ class FileService {
      *
      * Empty or blank lines in the CSV file are ignored.
      *
-     * @param resourcePath The path to the CSV file within the application's resources (e.g., "/data/waypoints.csv").
+     * @param resourcePath The path to the CSV file (e.g., "/data/waypoints.csv").
      * @return A List of [Waypoint] objects parsed from the CSV file.
      * @throws FileNotFoundException If the file specified by [resourcePath] cannot be found in the resources.
      * @throws NumberFormatException If any of the timestamp, latitude, or longitude values cannot be parsed as a Double.
@@ -52,17 +52,16 @@ class FileService {
      *
      * The YAML file is expected to contain data that can be mapped to the [CustomParameter] class.
      *
-     * @param resourcePath The path to the YAML file within the application's resources.
-     * Defaults to "/custom-parameters.yaml" if no path is provided.
+     * @param filePath The path to the YAML file
+     * Defaults to "/app/custom-parameters.yaml" if no path is provided.
      * @return A [CustomParameter] object populated with the data from the YAML file.
-     * @throws FileNotFoundException If the file specified by [resourcePath] cannot be found in the resources.
+     * @throws FileNotFoundException If the file specified by [filePath] cannot be found in the resources.
      * of the YAML file does not match the expected structure for
      * the [CustomParameter] class.
      */
-    fun readYaml(resourcePath: String = "/custom-parameters.yaml"): CustomParameter {
+    fun readYaml(filePath: String = "/app/custom-parameters.yaml"): CustomParameter {
         val yaml = Yaml()
-        val inputStream = object {}.javaClass.getResourceAsStream(resourcePath)
-            ?: throw FileNotFoundException("File not found: $resourcePath")
+        val inputStream = File(filePath).inputStream()
 
         return yaml.loadAs(inputStream, CustomParameter::class.java)
     }
