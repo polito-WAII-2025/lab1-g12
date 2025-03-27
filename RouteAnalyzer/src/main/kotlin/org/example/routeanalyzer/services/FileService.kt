@@ -21,7 +21,7 @@ class FileService {
     }
 
     /**
-     * Reads waypoint data from a CSV file located within the application's resources.
+     * Reads waypoint data from a CSV file.
      *
      * The CSV file is expected to have three semicolon-separated columns:
      * - **timestamp**: A Double representing the timestamp of the waypoint.
@@ -52,7 +52,7 @@ class FileService {
     }
 
     /**
-     * Reads custom parameter data from a YAML file located within the application's resources.
+     * Reads custom parameter data from a YML file.
      *
      * The YAML file is expected to contain data that can be mapped to the [CustomParameter] class.
      *

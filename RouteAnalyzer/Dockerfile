@@ -1,17 +1,23 @@
-# Usa un'immagine base con Java per eseguire il codice Kotlin
+# Use a lightweight OpenJDK image
 FROM openjdk:21-jdk-slim
 
-# Imposta la directory di lavoro all'interno del contenitore
+# Working directory inside the container
 WORKDIR /app
 
-# Copia il codice sorgente dell'applicazione (per esempio, i file .jar o le cartelle build) nel contenitore
+# Application JAR
 COPY build/libs/RouteAnalyzer-0.0.1-SNAPSHOT.jar /app/RouteAnalyzer.jar
 
-# Copia il file custom-parameters.yml nel contenitore (questo sarà montato durante l'esecuzione)
+# Custom parameters file
 COPY custom-parameters.yml /app/custom-parameters.yml
 
-# Copia il file waypoints.csv nel contenitore (questo sarà montato durante l'esecuzione)
+# Waypoints file
 COPY waypoints.csv /app/waypoints.csv
 
-# Imposta il comando per eseguire l'applicazione Kotlin
+# Output directory
+RUN mkdir -p /app/output
+
+# Volume for persisting output files
+VOLUME ["/app/output"]
+
+# Run
 CMD ["java", "-jar", "RouteAnalyzer.jar"]

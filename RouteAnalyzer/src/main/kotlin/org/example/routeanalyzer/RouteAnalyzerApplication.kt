@@ -62,6 +62,6 @@ fun main(args: Array<String>) {
     )
     val advancedOutput = JSONOutputAdvanced(totalDistance)
 
-    fileService.output("/app/output.json", finalOutput) // Using absolute paths within the container
-    fileService.outputAdvanced("/app/output_advanced.json", advancedOutput) // Using absolute paths within the container
+    fileService.output("/app/output.json", finalOutput)
+    fileService.outputAdvanced("/app/output_advanced.json", advancedOutput)
 }
