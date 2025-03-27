@@ -5,8 +5,7 @@ import org.example.routeanalyzer.services.FileService
 import org.example.routeanalyzer.services.RouteAnalyzerService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-
-const val maxDist = 2000.0
+import java.io.FileNotFoundException
 
 @SpringBootApplication
 class RouteAnalyzerApplication
@@ -14,35 +13,55 @@ class RouteAnalyzerApplication
 
 fun main(args: Array<String>) {
 
-    val csvFilePath = if (args.isNotEmpty()) args[0] else "/waypoints.csv"
+    val defaultCsvFilePath = "/app/waypoints.csv"
+    val defaultYamlFilePath = "/app/custom-parameters.yml"
+
+    val csvFilePath = args.getOrNull(0) ?: defaultCsvFilePath
+    val yamlFilePath = args.getOrNull(1) ?: defaultYamlFilePath
+
+    println("Using Waypoints File: $csvFilePath")
+    println("Using Custom Parameters File: $yamlFilePath")
 
     runApplication<RouteAnalyzerApplication>(*args)
 
-    // Initializing file service and analyzer service
     val fileService = FileService()
     val routeAnalyzerService = RouteAnalyzerService()
 
-    // Reading waypoints file and custom parameters
-    val waypoints = fileService.readCsv(csvFilePath)
-    val customParameter = fileService.readYaml("C:\\Users\\USER\\Documents\\Codice\\lab1-g12\\RouteAnalyzer\\custom-parameters.yaml")
+    val waypoints = try {
+        fileService.readCsv(csvFilePath)
+    } catch (e: FileNotFoundException) {
+        println("Error reading CSV file: ${e.message}. Using default path if applicable.")
+        if (csvFilePath != defaultCsvFilePath) {
+            fileService.readCsv(defaultCsvFilePath)
+        } else {
+            throw e
+        }
+    }
 
-    // Computing data
+    val customParameter = try {
+        fileService.readYaml(yamlFilePath)
+    } catch (e: FileNotFoundException) {
+        println("Error reading YAML file: ${e.message}. Using default path if applicable.")
+        if (yamlFilePath != defaultYamlFilePath) {
+            fileService.readYaml(defaultYamlFilePath)
+        } else {
+            throw e
+        }
+    }
+
     val maxDistanceFromStart: MaxDistanceFromStart = routeAnalyzerService.calculateMaxDistance(customParameter ,waypoints)
     val mostFrequentedArea: MostFrequentedArea = routeAnalyzerService.mostFrequentedArea(customParameter, waypoints)
     val waypointsOutsideGeofence: OutsideGeofence = routeAnalyzerService.waypointsOutsideGeofence(customParameter, waypoints)
 
     val totalDistance = routeAnalyzerService.totalDistance(customParameter, waypoints)
 
-    // Putting everything together
     val finalOutput = JSONOutput(
         maxDistanceFromStart,
         mostFrequentedArea,
         waypointsOutsideGeofence
     )
-
     val advancedOutput = JSONOutputAdvanced(totalDistance)
 
-    //Writing to Output
-    fileService.output("./output.json", finalOutput)
-    fileService.outputAdvanced("./output_advanced.json", advancedOutput)
+    fileService.output("/app/output.json", finalOutput) // Using absolute paths within the container
+    fileService.outputAdvanced("/app/output_advanced.json", advancedOutput) // Using absolute paths within the container
 }

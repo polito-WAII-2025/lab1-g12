@@ -8,6 +8,7 @@ import org.example.routeanalyzer.models.JSONOutputAdvanced
 import org.example.routeanalyzer.models.Waypoint
 import org.yaml.snakeyaml.Yaml
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
 
@@ -29,14 +30,17 @@ class FileService {
      *
      * Empty or blank lines in the CSV file are ignored.
      *
-     * @param resourcePath The path to the CSV file (e.g., "/data/waypoints.csv").
+     * @param filePath The path to the CSV file (e.g., "/data/waypoints.csv").
      * @return A List of [Waypoint] objects parsed from the CSV file.
-     * @throws FileNotFoundException If the file specified by [resourcePath] cannot be found in the resources.
+     * @throws FileNotFoundException If the file specified by [filePath] cannot be found in the resources.
      * @throws NumberFormatException If any of the timestamp, latitude, or longitude values cannot be parsed as a Double.
      */
-    fun readCsv(resourcePath: String): List<Waypoint> {
-        val inputStream: InputStream = object {}.javaClass.getResourceAsStream(resourcePath)
-            ?: throw FileNotFoundException("File non trovato: $resourcePath")
+    fun readCsv(filePath: String): List<Waypoint> {
+        val inputStream: InputStream = try {
+            FileInputStream(File(filePath))
+        } catch (e: FileNotFoundException) {
+            throw FileNotFoundException("File not found at path: $filePath")
+        }
 
         val reader = inputStream.bufferedReader()
         return reader.lineSequence()

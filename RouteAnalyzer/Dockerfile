@@ -8,7 +8,7 @@ WORKDIR /app
 COPY build/libs/RouteAnalyzer-0.0.1-SNAPSHOT.jar /app/RouteAnalyzer.jar
 
 # Copia il file custom-parameters.yml nel contenitore (questo sarà montato durante l'esecuzione)
-COPY ./custom-parameters.yaml /app/custom-parameters.yaml
+COPY custom-parameters.yml /app/custom-parameters.yaml
 
 # Imposta il comando per eseguire l'applicazione Kotlin
 CMD ["java", "-jar", "RouteAnalyzer.jar"]
