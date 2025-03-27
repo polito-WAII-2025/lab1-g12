@@ -1,6 +1,5 @@
 package org.example.routeanalyzer.services
 
-import org.example.routeanalyzer.maxDist
 import org.example.routeanalyzer.models.CustomParameter
 import org.example.routeanalyzer.models.MaxDistanceFromStart
 import org.example.routeanalyzer.models.MostFrequentedArea
@@ -102,23 +101,6 @@ class RouteAnalyzerService {
         customParameters: CustomParameter,
         waypoints: List<Waypoint>
     ): MaxDistanceFromStart {
-        lateinit var centralWaypoint: Waypoint
-        var entriesCount = 0
-        for(i in waypoints){
-            val centerLat = i.latitude
-            val centerLng = i.longitude
-            val radius = customParameters.mostFrequentedAreaRadiusKm ?: (round((maxDist/10) * 10) / 10)
-            var counter = 0
-            for(j in waypoints){
-                if(isPointInCircle(centerLat,centerLng,radius,j.latitude,j.longitude)){
-                    counter++
-                }
-            }
-            if (counter > entriesCount){
-                entriesCount = counter
-                centralWaypoint = i
-            }
-        }
 
         val startPoint = waypoints.first()
         var maxDistance = 0.0
